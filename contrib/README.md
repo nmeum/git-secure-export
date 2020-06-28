@@ -1,6 +1,6 @@
 # git-secure-export contrib
 
-Scripts for using `git-secure-export` a git remote-helper.
+Scripts for using `git-secure-export` as a git remote-helper.
 
 ## Architecture
 
