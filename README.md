@@ -1,6 +1,6 @@
 # git-secure-export
 
-Tooling for encrypting `git-fast-export(1)` output.
+Experimental tooling for encrypting the `git-fast-export(1)` output.
 
 ## Description
 
@@ -10,15 +10,15 @@ exported git repositories. Additionally, `git-secure-import` is provided
 which acts as a preprocessor for `git-fast-import(1)` and allows
 importing a previously encrypted `git-fast-export(1)` output.
 
-Based on these two programs, two hacky shell scripts were written which
-implement an ssh-based git remote helper (refer to
+Based on these two programs, two very hacky shell scripts were written
+which implement an ssh-based git remote helper (refer to
 `gitremote-helpers(7)`) for encrypting repository on the remote. The
 setup requires access to the remote server for installing a custom
 script and thus does not work with GitHub or other hosted Git solutions.
 
 ## Status
 
-Proof of concept, largely untested and likely very buggy.
+Proof of concept, largely untested and very buggy.
 
 ## Security
 
