@@ -18,7 +18,7 @@ script and thus does not work with GitHub or other hosted Git solutions.
 
 ## Status
 
-Proof of concept.
+Proof of concept, largely untested and likely very buggy.
 
 ## Security
 
