@@ -22,7 +22,7 @@ func Handle(in io.Reader, out io.Writer, fn CryptFn) error {
 
 		var numBytes uint
 		n, _ := fmt.Sscanf(line, "data %d\n", &numBytes)
-		if n != 1 {
+		if n != 1 || numBytes == 0 {
 			fmt.Fprint(out, line)
 			continue
 		}
