@@ -24,10 +24,10 @@ Proof of concept, largely untested and likely very buggy.
 
 The code uses [secretbox][secretbox doc] for symmetric encryption and
 authentication of file contents and commit messages. The symmetric key
-is stored in `.git/git-secure-key`, the file will be automatically
-created on the initial invocation of `git-fast-export(1)`. Encryption of
-file names is also being considered but would likely require a separate
-deterministic encryption scheme or some kind of local database.
+is stored in `.git/git-secure-key`, the file must be created explicitly
+using `git-secure-init`. Encryption of file names is also being
+considered but would likely require a separate deterministic encryption
+scheme or some kind of local database.
 
 ## Installation
 

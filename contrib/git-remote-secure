@@ -4,15 +4,16 @@
 if [ ! -e "$GIT_DIR/git-secure-key" ]; then
 	cat 1>&2 <<-EOF
 		*
-		* git-remote-secure cannot clone repositories as the
-		* symmetric key, needed for decrypting the repository,
-		* must be provided first.
+		* The symmetric key, needed for decrypting the repository, does
+		* not exist yet. If you are creating a new repository this key
+		* must be created explicitly using git-secure-init.
 		*
-		* If you have access to the symmetric key:
+		* If you are attempting to clone an existing repository and have
+		* access to the utilized symmetric key perform the following steps:
 		*
 		*  1. Manually initialize the repository using git-init(1).
 		*  2. Copy the symmetric key to the .git/ directory.
-		*  3. Add the secure:// remote manually and pull.
+		*  3. Add the secure:// remote manually and pull/fetch.
 		*
 EOF
 	exit 1
