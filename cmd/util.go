@@ -29,7 +29,7 @@ func Handle(in io.Reader, out io.Writer, fn CryptFn) error {
 
 		buf := make([]byte, numBytes)
 		writer := bytes.NewBuffer(buf)
-		n, err = fn(in, int64(numBytes), writer)
+		n, err = fn(reader, int64(numBytes), writer)
 		if err != nil {
 			return err
 		}
