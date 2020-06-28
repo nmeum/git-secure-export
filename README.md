@@ -39,6 +39,21 @@ If you want to use the remote helper also install the scripts from the
 `contrib/` directory. Refer to `contrib/README.md` for more information
 on these scripts.
 
+## Usage
+
+The software requires the creation of a symmetric key this key must be
+created explicitly by invoking `git secure-init` in an existing git
+repository. Afterwards `git-secure-export` can be used in combination
+with `git-fast-export(1)` as follows:
+
+	$ git fast-export <options> | git secure-export | \
+		git secure-import | git fast-import
+
+Of cause it would be more meaningful to write the output of
+`git-secure-export` to a file, using an output redirection, and passing
+it to `git-secure-import`, using an input redirection, on a different
+computer. Though this use-case would require copying the symmetric key.
+
 ## See also
 
 Existing tooling which encrypts single files in a git repository:
