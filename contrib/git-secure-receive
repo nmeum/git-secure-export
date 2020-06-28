@@ -1,0 +1,117 @@
+#!/bin/sh
+# Copyright (c) 2012 Felipe Contreras
+#
+# Slightly modified version of git-remote-testgit(1). Copied from the
+# git-2.27 source tree (t/t5801/git-remote-testgit). As it was copied
+# from Git itself, it is licensed under the GNU General Public License
+# version 2. Refer to the git-2.27 source tree for further license
+# information.
+#
+# This file is intended to be installed to $PATH on your git server.
+
+if [ $# -ne 1 ]; then
+	echo "USAGE: ${0##*/} GIT_REPOSITORY" 1>&2
+	exit 1
+fi
+
+GIT_DIR="${1}/$(git -C "${1}" rev-parse --git-dir)"
+export GIT_DIR
+
+if [ ! -d "${GIT_DIR}" ]; then
+	echo "Repository '${GIT_DIR}' does not exist" 1>&2
+	exit 1
+fi
+
+dir="$GIT_DIR/secure"
+mkdir -p "$dir"
+
+h_refspec="refs/heads/*:refs/testgit/heads/*"
+t_refspec="refs/tags/*:refs/testgit/tags/*"
+
+force=
+
+while read line
+do
+	case $line in
+	capabilities)
+		echo 'import'
+		echo 'export'
+		test -n "$h_refspec" && echo "refspec $h_refspec"
+		test -n "$t_refspec" && echo "refspec $t_refspec"
+		if test -n "$gitmarks"
+		then
+			echo "*import-marks $gitmarks"
+			echo "*export-marks $gitmarks"
+		fi
+		echo 'option'
+		echo
+		;;
+	list)
+		git for-each-ref --format='? %(refname)' 'refs/heads/' 'refs/tags/'
+		head=$(git symbolic-ref HEAD)
+		echo "@$head HEAD"
+		echo
+		;;
+	import*)
+		# read all import lines
+		while true
+		do
+			ref="${line#* }"
+			refs="$refs $ref"
+			read line
+			test "${line%% *}" != "import" && break
+		done
+
+		if test -n "$gitmarks"
+		then
+			echo "feature import-marks=$gitmarks"
+			echo "feature export-marks=$gitmarks"
+		fi
+
+		echo "feature done"
+		git fast-export \
+			--refspec="$h_refspec" \
+			--refspec="$t_refspec" \
+			$refs
+		echo "done"
+		;;
+	export)
+		before=$(git for-each-ref --format=' %(refname) %(objectname) ')
+		
+		git fast-import \
+			${force:+--force} \
+			--quiet
+
+		# figure out which refs were updated
+		git for-each-ref --format='%(refname) %(objectname)' |
+		while read ref a
+		do
+			case "$before" in
+			*" $ref $a "*)
+				continue ;;	# unchanged
+			esac
+			
+			echo "ok $ref"
+		done
+
+		echo
+		;;
+	option\ *)
+		read cmd opt val <<-EOF
+		$line
+		EOF
+		case $opt in
+		force)
+			test $val = "true" && force="true" || force=
+			echo "ok"
+			;;
+		*)
+			echo "unsupported"
+			;;
+		esac
+		;;
+	'')
+		exit
+		;;
+	esac
+done

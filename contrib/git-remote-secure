@@ -1,0 +1,23 @@
+#!/bin/sh
+# Git remote helper for git-secure-export, see gitremote-helpers(7).
+
+# From gitremote-helpers(7):
+#  The second argument specifies a URL; it is usually of the form
+#  <transport>://<address>, but any arbitrary string is possible.
+URL="$2"
+
+get_host() {
+	echo "$URL" | sed 's|^..*://\(..*\):.*|\1|'
+}
+
+get_path() {
+	echo "$URL" | sed 's|^..*://..*:\(.*\)|\1|'
+}
+
+# git-secure-import only encrypts data as specified in the INPUT
+# FORMAT section of git-fast-import(1). Similarly, git-secure-import
+# only decrypt data matching this format. All other data is simply
+# copied from standard input to standard output.
+git-secure-export | \
+	ssh "$(get_host)" "git-secure-receive $(get_path)" | \
+	git-secure-import
