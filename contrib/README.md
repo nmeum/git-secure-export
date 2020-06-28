@@ -30,3 +30,18 @@ Afterwards, you can push/pull your repository as you would normally
 while data is transparently encrypted/decrypted by the remote helper.
 You can verify that the plaintext is not stored on the server by cloning
 your encrypted repository over ssh without using `git-remote-secure`.
+
+## Usage
+
+Example initialization of a new repository on both client and server:
+
+	$ mkdir testrepo && cd testrepo
+	$ git init
+	Initialized empty Git repository in /tmp/testrepo
+	$ git secure-init
+	Initialized symmetric key in .git/git-secure-key
+	$ ssh example.org 'mkdir -p testrepo && git -C testrepo init'
+	Initialized empty Git repository in /home/user/testrepo/.git/
+	$ git remote add secure://example.org:repos/testrepo
+
+Afterwards files can be committed and pushed as usual.
