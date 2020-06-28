@@ -10,10 +10,10 @@ import (
 	cmd "github.com/nmeum/git-secure-export/cmd"
 )
 
-var key [git.KeySize]byte
+var key *[git.KeySize]byte
 
 func cryptFn(in io.Reader, inLen int64, out io.Writer) (int, error) {
-	return git.Decrypt(in, inLen, out, &key)
+	return git.Decrypt(in, inLen, out, key)
 }
 
 func main() {

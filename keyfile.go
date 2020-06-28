@@ -2,7 +2,7 @@ package export
 
 import (
 	"crypto/rand"
-	"io/ioutil"
+	"io"
 	"os"
 )
 
@@ -37,7 +37,7 @@ func createKeyFile(path string) (*os.File, error) {
 	return file, nil
 }
 
-func ReadKey(path string) ([]byte, error) {
+func ReadKey(path string) (*[KeySize]byte, error) {
 	file, err := os.Open(path)
 	if os.IsNotExist(err) {
 		file, err = createKeyFile(path)
@@ -47,10 +47,11 @@ func ReadKey(path string) ([]byte, error) {
 	}
 	defer file.Close()
 
-	key, err := ioutil.ReadAll(file)
+	var key [KeySize]byte
+	_, err = io.ReadFull(file, key[:])
 	if err != nil {
 		return nil, err
 	}
 
-	return key, nil
+	return &key, nil
 }
