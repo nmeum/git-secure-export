@@ -28,8 +28,6 @@ mkdir -p "$dir"
 h_refspec="refs/heads/*:refs/testgit/heads/*"
 t_refspec="refs/tags/*:refs/testgit/tags/*"
 
-force=
-
 while read line
 do
 	case $line in
@@ -43,7 +41,6 @@ do
 			echo "*import-marks $gitmarks"
 			echo "*export-marks $gitmarks"
 		fi
-		echo 'option'
 		echo
 		;;
 	list)
@@ -78,8 +75,12 @@ do
 	export)
 		before=$(git for-each-ref --format=' %(refname) %(objectname) ')
 		
+		# As file contents are encrypted, files on the git
+		# server have a different checksum than local files,
+		# i.e. the entire commit history is different. For this
+		# reason force pushing is required and likely unavoidable.
 		git fast-import \
-			${force:+--force} \
+			--force \
 			--quiet
 
 		# figure out which refs were updated
@@ -95,20 +96,6 @@ do
 		done
 
 		echo
-		;;
-	option\ *)
-		read cmd opt val <<-EOF
-		$line
-		EOF
-		case $opt in
-		force)
-			test $val = "true" && force="true" || force=
-			echo "ok"
-			;;
-		*)
-			echo "unsupported"
-			;;
-		esac
 		;;
 	'')
 		exit
