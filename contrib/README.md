@@ -10,6 +10,10 @@ on this server. Afterwards, remote helper commands are piped to it. Data
 send to the server is encrypted using `git-secure-export`, data received
 from the server is decrypted using `git-secure-import`.
 
+## Limitations
+
+Every git push effectively has `--force`.
+
 ## Installation
 
 This setup requires install one script on the server and the client.
