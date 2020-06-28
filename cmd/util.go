@@ -38,8 +38,6 @@ func Handle(in io.Reader, out io.Writer, fn CryptFn) error {
 		if err != nil {
 			return err
 		}
-
-		// TODO: Handle optional terminating newline
 	}
 
 	return nil
