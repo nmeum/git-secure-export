@@ -25,7 +25,7 @@ func main() {
 	}
 
 	keyPath := filepath.Join(gitDir, "git-secure-key")
-	key, err = git.ReadKey(keyPath)
+	key, err = git.ReadKey(keyPath, true)
 	if err != nil {
 		log.Fatal(err)
 	}

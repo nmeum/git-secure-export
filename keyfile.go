@@ -37,9 +37,9 @@ func createKeyFile(path string) (*os.File, error) {
 	return file, nil
 }
 
-func ReadKey(path string) (*[KeySize]byte, error) {
+func ReadKey(path string, create bool) (*[KeySize]byte, error) {
 	file, err := os.Open(path)
-	if os.IsNotExist(err) {
+	if os.IsNotExist(err) && create {
 		file, err = createKeyFile(path)
 	}
 	if err != nil {
