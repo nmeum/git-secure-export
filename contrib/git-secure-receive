@@ -36,11 +36,6 @@ do
 		echo 'export'
 		test -n "$h_refspec" && echo "refspec $h_refspec"
 		test -n "$t_refspec" && echo "refspec $t_refspec"
-		if test -n "$gitmarks"
-		then
-			echo "*import-marks $gitmarks"
-			echo "*export-marks $gitmarks"
-		fi
 		echo
 		;;
 	list)
@@ -58,12 +53,6 @@ do
 			read line
 			test "${line%% *}" != "import" && break
 		done
-
-		if test -n "$gitmarks"
-		then
-			echo "feature import-marks=$gitmarks"
-			echo "feature export-marks=$gitmarks"
-		fi
 
 		echo "feature done"
 		git fast-export \
